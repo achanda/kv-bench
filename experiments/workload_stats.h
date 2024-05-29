@@ -1,14 +1,14 @@
 #ifndef WORKLOAD_STATS_H_
 #define WORKLOAD_STATS_H_
 
-#include <cstdint>
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <vector>
-#include <utility>
-#include <unordered_map>
 #include <assert.h>
+#include <cmath>
+#include <cstdint>
+#include <fstream>
+#include <iostream>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 enum QueryType : char {
   INSERT = 'I',
@@ -21,19 +21,19 @@ enum QueryType : char {
 };
 
 // 4 Bytes per point lookup/delete entry
-struct BaseEntry{
+struct BaseEntry {
   std::string key;
   BaseEntry() : key("") {}
   virtual ~BaseEntry() = default;
-  explicit BaseEntry(std::string k) : key(k){}
+  explicit BaseEntry(std::string k) : key(k) {}
 };
 
 // 4 + value size per insert/update query
-struct Entry : public BaseEntry{
+struct Entry : public BaseEntry {
   std::string value;
   Entry() : BaseEntry(), value("") {}
   explicit Entry(std::string k) : BaseEntry(k), value("") {}
-  explicit Entry(std::string k,  std::string v) : BaseEntry(k), value(v) {}
+  explicit Entry(std::string k, std::string v) : BaseEntry(k), value(v) {}
 };
 
 // 8 Bytes per range query;
@@ -42,28 +42,27 @@ struct RangeEntry : public BaseEntry {
   RangeEntry() : BaseEntry(), end_key("") {}
 
   explicit RangeEntry(std::string start_key, std::string _end_key)
-   : BaseEntry(start_key), end_key(_end_key) {
-  }
+      : BaseEntry(start_key), end_key(_end_key) {}
 };
 
-// Store descriptions and apointer to an query entry for efficient use 
+// Store descriptions and apointer to an query entry for efficient use
 // Maximal overhead: 17 Bytes per query;
 struct QueryDescriptor {
-  uint64_t seq;   // >0 && =index + 1;
+  uint64_t seq; // >0 && =index + 1;
   QueryType type;
   BaseEntry *entry_ptr;
   QueryDescriptor() : seq(0), type(NONE), entry_ptr(nullptr) {}
-  explicit QueryDescriptor(uint64_t seq_, QueryType ktype, BaseEntry *entry) 
-   : seq(seq_), type(ktype), entry_ptr(entry) {}
+  explicit QueryDescriptor(uint64_t seq_, QueryType ktype, BaseEntry *entry)
+      : seq(seq_), type(ktype), entry_ptr(entry) {}
 };
 
-// Store in-memory workload and relative stats 
+// Store in-memory workload and relative stats
 struct WorkloadDescriptor {
-  std::string path_;       // workload path
+  std::string path_; // workload path
   uint64_t total_num = 0;
-  uint64_t actual_total_num = 0;	
+  uint64_t actual_total_num = 0;
   uint64_t insert_num = 0;
-  uint64_t actual_insert_num = 0;		// for pseudo zero result point lookup
+  uint64_t actual_insert_num = 0; // for pseudo zero result point lookup
   uint64_t update_num = 0;
   uint64_t plookup_num = 0;
   uint64_t rlookup_num = 0;
@@ -95,7 +94,6 @@ struct QueryTracker {
   uint64_t range_lookups_cost = 0;
   uint64_t workload_exec_time = 0;
   uint64_t experiment_exec_time = 0;
-
 };
 
 // Preload workload into memory,

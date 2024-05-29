@@ -372,6 +372,30 @@ void write_collected_throughput(
   throughput_ofs.close();
 }
 
+int runIngestionWorkload(DB *_db, const EmuEnv *_env, Options *op,
+                         const BlockBasedTableOptions *table_op,
+                         const WriteOptions *write_op,
+                         const ReadOptions *read_op,
+                         const FlushOptions *flush_op, EnvOptions *env_op,
+                         const WorkloadDescriptor *wd,
+                         QueryTracker *query_track,
+                         std::vector<double> *throughput_collector) {
+  std::cout << "Runing ingestion workload ..." << std::endl;
+  return runWorkload(_db, _env, op, table_op, write_op, read_op, flush_op,
+                     env_op, wd, query_track, throughput_collector);
+}
+
+int runQueryWorkload(DB *_db, const EmuEnv *_env, Options *op,
+                     const BlockBasedTableOptions *table_op,
+                     const WriteOptions *write_op, const ReadOptions *read_op,
+                     const FlushOptions *flush_op, EnvOptions *env_op,
+                     const WorkloadDescriptor *wd, QueryTracker *query_track,
+                     std::vector<double> *throughput_collector) {
+  std::cout << "Runing query workload ..." << std::endl;
+  return runWorkload(_db, _env, op, table_op, write_op, read_op, flush_op,
+                     env_op, wd, query_track, throughput_collector);
+}
+
 // Run a workload from memory
 // The workload is stored in WorkloadDescriptor
 // Use QueryTracker to record performance for each query operation

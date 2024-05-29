@@ -13,91 +13,92 @@ void parseQueryWorkload(WorkloadDescriptor *wd) {
 void parseWorkload(WorkloadDescriptor *wd) {
   assert(wd != nullptr);
   assert(wd->queries.size() == 0);
-	std::ifstream f;
-	std::string key, start_key, end_key;
-	std::string value;
-	char mode;
+  std::ifstream f;
+  std::string key, start_key, end_key;
+  std::string value;
+  char mode;
   BaseEntry *tmp = nullptr;
   f.open(wd->path_);
   assert(f);
-  while(f >> mode) {
+  while (f >> mode) {
     QueryDescriptor qd;
     switch (mode) {
-      case 'I':
-        f >> key >> value;
-        // create a entry
-        tmp = new Entry(key, value);
-        qd.seq = wd->queries.size() + 1;
-        qd.type = INSERT;
-        qd.entry_ptr = tmp;
-        wd->queries.push_back(qd);
-        ++wd->insert_num;
-        ++wd->total_num;
-        break;
-      case 'U':
-        f >> key >> value;
-        tmp = new Entry(key, value);
-        qd.seq = wd->queries.size() + 1;
-        qd.type = UPDATE;
-        qd.entry_ptr = tmp; 
-        wd->queries.push_back(qd);
-        ++wd->update_num;
-        ++wd->total_num;
-        break;
-      case 'D':
-        f >> key;
-        tmp = new BaseEntry(key);
-        qd.seq = wd->queries.size() + 1;
-        qd.type = DELETE;
-        qd.entry_ptr = tmp; 
-        wd->queries.push_back(qd);
-        ++wd->pdelete_num;
-        ++wd->total_num;
-        break;
-      case 'R':
-        f >> start_key >> end_key;
-        tmp = new RangeEntry(start_key, end_key);
-        qd.seq = wd->queries.size() + 1;
-        qd.type = RANGE_DELETE;
-        qd.entry_ptr = tmp; 
-        wd->queries.push_back(qd);
-        ++wd->rdelete_num;
-        ++wd->total_num;
-        break;
-      case 'Q':
-        f >> key;
-        tmp = new BaseEntry(key);
-        qd.seq = wd->queries.size() + 1;
-        qd.type = LOOKUP;
-        qd.entry_ptr = tmp; 
-        wd->queries.push_back(qd);
-        ++wd->plookup_num;
-        ++wd->total_num;
-        break;
-      case 'S':
-        f >> start_key >> end_key;
-        tmp = new RangeEntry(start_key, end_key);
-        qd.seq = wd->queries.size() + 1;
-        qd.type = RANGE_LOOKUP;
-        qd.entry_ptr = tmp; 
-        wd->queries.push_back(qd);
-        ++wd->rlookup_num;
-        ++wd->total_num;
-        break;
-      default:
-        std::cerr << "Unconfigured query mode: " << mode << std::endl;
-        break;
+    case 'I':
+      f >> key >> value;
+      // create a entry
+      tmp = new Entry(key, value);
+      qd.seq = wd->queries.size() + 1;
+      qd.type = INSERT;
+      qd.entry_ptr = tmp;
+      wd->queries.push_back(qd);
+      ++wd->insert_num;
+      ++wd->total_num;
+      break;
+    case 'U':
+      f >> key >> value;
+      tmp = new Entry(key, value);
+      qd.seq = wd->queries.size() + 1;
+      qd.type = UPDATE;
+      qd.entry_ptr = tmp;
+      wd->queries.push_back(qd);
+      ++wd->update_num;
+      ++wd->total_num;
+      break;
+    case 'D':
+      f >> key;
+      tmp = new BaseEntry(key);
+      qd.seq = wd->queries.size() + 1;
+      qd.type = DELETE;
+      qd.entry_ptr = tmp;
+      wd->queries.push_back(qd);
+      ++wd->pdelete_num;
+      ++wd->total_num;
+      break;
+    case 'R':
+      f >> start_key >> end_key;
+      tmp = new RangeEntry(start_key, end_key);
+      qd.seq = wd->queries.size() + 1;
+      qd.type = RANGE_DELETE;
+      qd.entry_ptr = tmp;
+      wd->queries.push_back(qd);
+      ++wd->rdelete_num;
+      ++wd->total_num;
+      break;
+    case 'Q':
+      f >> key;
+      tmp = new BaseEntry(key);
+      qd.seq = wd->queries.size() + 1;
+      qd.type = LOOKUP;
+      qd.entry_ptr = tmp;
+      wd->queries.push_back(qd);
+      ++wd->plookup_num;
+      ++wd->total_num;
+      break;
+    case 'S':
+      f >> start_key >> end_key;
+      tmp = new RangeEntry(start_key, end_key);
+      qd.seq = wd->queries.size() + 1;
+      qd.type = RANGE_LOOKUP;
+      qd.entry_ptr = tmp;
+      wd->queries.push_back(qd);
+      ++wd->rlookup_num;
+      ++wd->total_num;
+      break;
+    default:
+      std::cerr << "Unconfigured query mode: " << mode << std::endl;
+      break;
     }
   }
   // for creating pseudo zeor-result point lookup
-  wd->actual_insert_num = wd->insert_num;   
-  wd->actual_total_num = wd->total_num;    
+  wd->actual_insert_num = wd->insert_num;
+  wd->actual_total_num = wd->total_num;
   f.close();
   std::cout << "Parsing complete ..." << std::endl;
 }
 
 void dumpStats(QueryTracker *sample, const QueryTracker *single) {
-  if (sample == nullptr) sample = new QueryTracker();
+  if (sample == nullptr)
+    sample = new QueryTracker();
   sample->total_completed += single->total_completed;
   sample->inserts_completed += single->inserts_completed;
   sample->updates_completed += single->updates_completed;

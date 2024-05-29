@@ -62,6 +62,22 @@ int runWorkload(DB *_db, const EmuEnv *_env, Options *op,
                 std::vector<double> *throughput_collector =
                     nullptr); // run_workload internal
 
+int runQueryWorkload(DB *_db, const EmuEnv *_env, Options *op,
+                     const BlockBasedTableOptions *table_op,
+                     const WriteOptions *write_op, const ReadOptions *read_op,
+                     const FlushOptions *flush_op, EnvOptions *env_op,
+                     const WorkloadDescriptor *wd, QueryTracker *query_track,
+                     std::vector<double> *throughput_collector = nullptr);
+
+int runIngestionWorkload(DB *_db, const EmuEnv *_env, Options *op,
+                         const BlockBasedTableOptions *table_op,
+                         const WriteOptions *write_op,
+                         const ReadOptions *read_op,
+                         const FlushOptions *flush_op, EnvOptions *env_op,
+                         const WorkloadDescriptor *wd,
+                         QueryTracker *query_track,
+                         std::vector<double> *throughput_collector = nullptr);
+
 std::vector<std::string> StringSplit(std::string &str, char delim);
 
 // Print progress bar during workload execution

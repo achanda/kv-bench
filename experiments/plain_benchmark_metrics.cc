@@ -164,7 +164,7 @@ int runExperiments(EmuEnv *_env) {
     }
 
     // Run workload
-    runWorkload(db, _env, &options, &table_options, &write_options,
+    runIngestionWorkload(db, _env, &options, &table_options, &write_options,
                 &read_options, &flush_options, &env_options, &ingestion_wd,
                 ingestion_query_track);
 
@@ -202,12 +202,12 @@ int runExperiments(EmuEnv *_env) {
     }
 
     if (_env->throughput_collect_interval == 0) {
-      runWorkload(db, _env, &options, &table_options, &write_options,
+      runQueryWorkload(db, _env, &options, &table_options, &write_options,
                   &read_options, &flush_options, &env_options, &query_wd,
                   query_track);
     } else {
       temp_collector.clear();
-      runWorkload(db, _env, &options, &table_options, &write_options,
+      runQueryWorkload(db, _env, &options, &table_options, &write_options,
                   &read_options, &flush_options, &env_options, &query_wd,
                   query_track, &temp_collector);
       merge_tput_vectors(&throughput_collector, &temp_collector);
