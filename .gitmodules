@@ -4,7 +4,7 @@
 [submodule "rocksdb"]
 	path = rocksdb
 	url = git@github.com:achanda/rocksdb.git
-	branch = 08f93221f50700f19f11555fb46abfe708a716d1
+	branch = 44aceb88d0de120847719c061aa3a8465daaee48
 [submodule "kv-bench-rocksdb-example"]
 	path = kv-bench-rocksdb-example
 	url = https://github.com/BU-DiSC/kv-bench-rocksdb-example.git
